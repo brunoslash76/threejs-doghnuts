@@ -18,7 +18,7 @@ const scene = new THREE.Scene();
 
 // Axes Helper
 const axesHelper = new THREE.AxesHelper();
-scene.add(axesHelper);
+// scene.add(axesHelper);
 
 /**
  * Textures

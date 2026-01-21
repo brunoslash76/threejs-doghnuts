@@ -24,6 +24,7 @@ const scene = new THREE.Scene();
 const textureLoader = new THREE.TextureLoader();
 const matcapTexture = textureLoader.load("/textures/matcaps/3.png");
 const textTexture = textureLoader.load("/textures/matcaps/7.png");
+
 matcapTexture.colorSpace = THREE.SRGBColorSpace;
 textTexture.colorSpace = THREE.SRGBColorSpace;
 /**
@@ -75,7 +76,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   scene.add(textMesh);
   scene.add(subTextMesh);
   subTextGeometry.translate(-3.93, -0.5, 0);
-  console.time("donuts");
+
   const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45);
 
   for(let i = 0; i < 300; i++) {
@@ -94,7 +95,6 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
     scene.add(donutMesh);
   }
 
-  console.timeEnd("donuts");
 });
 
 /**
@@ -136,8 +136,12 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.x = 1;
 camera.position.y = 1;
-camera.position.z = 5;
+camera.position.z = 7;
 scene.add(camera);
+
+gui.add(camera.position, 'x').min(-3).max(3).step(0.001).name('Camera X');
+gui.add(camera.position, 'y').min(-3).max(3).step(0.001).name('Camera Y');
+gui.add(camera.position, 'z').min(-3).max(3).step(0.001).name('Camera Z');
 
 // Controls
 const controls = new OrbitControls(camera, canvas);
@@ -161,7 +165,10 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
   // Update controls
-  controls.update();
+  // camera.position.x = Math.sin(elapsedTime) * 1.5;
+  // camera.position.y = Math.cos(elapsedTime) * 1.5;
+  // camera.position.z = 10 + Math.cos(elapsedTime) * 0.5;
+  // camera.lookAt(scene.position);
 
   // Render
   renderer.render(scene, camera);

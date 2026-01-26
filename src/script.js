@@ -25,12 +25,16 @@ const textureLoader = new THREE.TextureLoader();
 const matcapTexture = textureLoader.load("/textures/matcaps/3.png");
 const textTexture = textureLoader.load("/textures/matcaps/7.png");
 
+const logoTexture = textureLoader.load("/logo.png");
+
 matcapTexture.colorSpace = THREE.SRGBColorSpace;
 textTexture.colorSpace = THREE.SRGBColorSpace;
+logoTexture.colorSpace = THREE.SRGBColorSpace;
 /**
  * Fonts
  */
 const fontLoader = new FontLoader();
+let logoMesh;
 
 fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   const textGeometry = new TextGeometry("Bruno Tavares de Moraes Russo", {
@@ -58,13 +62,16 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   });
   subTextGeometry.center();
 
+  const logoGeometry = new THREE.CircleGeometry(1.2, 32);
+  const logoMaterial = new THREE.MeshBasicMaterial({
+    map: logoTexture,
+    side: THREE.DoubleSide,
+    transparent: true,
+  });
+  logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
+  logoMesh.position.set(0, 1, 0);
+  scene.add(logoMesh);
 
-  // textGeometry.computeBoundingBox();
-  // textGeometry.translate(
-  //   - (textGeometry.boundingBox.max.x - 0.02) * 0.5,
-  //   - (textGeometry.boundingBox.max.y - 0.02) * 0.5,
-  //   - (textGeometry.boundingBox.max.z - 0.03) * 0.5,
-  // )
   textGeometry.center();
 
   const doughnutMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture });
@@ -73,13 +80,14 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   const textMesh = new THREE.Mesh(textGeometry, textMaterial);
   const subTextMesh = new THREE.Mesh(subTextGeometry, subTextMaterial);
 
+
   scene.add(textMesh);
   scene.add(subTextMesh);
   subTextGeometry.translate(-3.93, -0.5, 0);
 
-  const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45);
+  const donutGeometry = new THREE.SphereGeometry(0.3, 20, 20);
 
-  for(let i = 0; i < 300; i++) {
+  for(let i = 0; i < 200; i++) {
     const donutMesh = new THREE.Mesh(donutGeometry, doughnutMaterial);
 
     donutMesh.position.x = (Math.random() - 0.5) * 10;
@@ -165,10 +173,15 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
   // Update controls
-  // camera.position.x = Math.sin(elapsedTime) * 1.5;
-  // camera.position.y = Math.cos(elapsedTime) * 1.5;
-  // camera.position.z = 10 + Math.cos(elapsedTime) * 0.5;
-  // camera.lookAt(scene.position);
+  
+  // logoMesh.position.x = Math.sin(elapsedTime) * 1.5;
+  // logoMesh.position.y = Math.cos(elapsedTime) * 1.5;
+  // logoMesh.position.z = 10 + Math.cos(elapsedTime) * 0.5;
+  // logoMesh.lookAt(scene.position);
+  // logoMesh.position.x = Math.sin(elapsedTime) * 1.5;
+  if (logoMesh) {
+    logoMesh.rotation.y += Math.PI * 2 * 0.001;
+  }
 
   // Render
   renderer.render(scene, camera);
@@ -178,3 +191,4 @@ const tick = () => {
 };
 
 tick();
+
